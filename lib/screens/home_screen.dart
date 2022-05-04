@@ -1,23 +1,24 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:news/models/news_model.dart';
-import 'package:http/http.dart' as http;
+import 'package:news/providers/data.dart';
 import 'package:news/widgets/article_widget.dart';
 import 'package:news/widgets/sub_article_screen.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({
     Key? key,
-    required this.category,
+    // required this.category,
   }) : super(key: key);
-  String category;
+  // String category;
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  /*
   Future<NewsModel> getdata() async {
     String url =
         'http://api.mediastack.com/v1/news?access_key=2a1085d36be262ef91826756ce186f60&limit=100&offset0&categories=${widget.category}';
@@ -32,71 +33,49 @@ class _HomeScreenState extends State<HomeScreen> {
       throw Exception('Failed to load jobs from API');
     }
   }
+   */
 
   @override
   Widget build(BuildContext context) {
+    final news = Provider.of<DataProvider>(context);
     return SingleChildScrollView(
-      child: FutureBuilder(
-        future: getdata(),
-        builder: ((BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            // print("/n ### ${snapshot.data!.dataModel}");
-            print('futruebuilder');
-            //  print(snapshot.error);
-            //  print(snapshot.data!);
-            return Column(
-              children: [
-                // CategoryTitle(),
-                ListView.builder(
-                    padding: const EdgeInsets.all(10),
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: snapshot.data!.dataModel!.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final data = snapshot.data!.dataModel![index];
-                      print(data);
-                      return InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SubArticle(
-                                title: data.title!,
-                                author: data.author!,
-                                category: data.category!,
-                                image: data.image!,
-                                country: data.country!,
-                                description: data.description!,
-                                publishedAt: data.published_at!,
-                                source: data.source!,
-                                url: data.url!,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Article(
+      child: Column(
+        children: [
+          ListView.builder(
+              padding: const EdgeInsets.all(10),
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: news.dataLength,
+              itemBuilder: (BuildContext context, int index) {
+                final data = news.getNews[index].dataModel[index];
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SubArticle(
                           title: data.title!,
                           author: data.author!,
-                          categoryType: data.category!,
+                          category: data.category!,
                           image: data.image!,
+                          country: data.country!,
+                          description: data.description!,
+                          publishedAt: data.published_at!,
+                          source: data.source!,
+                          url: data.url!,
                         ),
-                      );
-                    })
-              ],
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('${snapshot.error}'),
-            );
-          } else {
-            return Center(
-              child: Lottie.asset(
-                'assets/animations/98143-black-loading.json',
-                repeat: true,
-              ),
-            );
-          }
-        }),
+                      ),
+                    );
+                  },
+                  child: Article(
+                    title: data.title!,
+                    author: data.author!,
+                    categoryType: data.category!,
+                    image: data.image!,
+                  ),
+                );
+              })
+        ],
       ),
     );
   }

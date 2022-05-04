@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:news/providers/data.dart';
 import 'package:news/screens/home_screen.dart';
+import 'package:news/widgets/custom_text.dart';
+import 'package:provider/provider.dart';
 
 class OneScreen extends StatefulWidget {
   const OneScreen({Key? key}) : super(key: key);
@@ -16,8 +19,9 @@ class _OneScreenState extends State<OneScreen>
   void initState() {
     super.initState();
     _tabController = TabController(
-      length: category.length,
+      length: 7,
       vsync: this,
+      initialIndex: 0,
     );
   }
 
@@ -30,62 +34,95 @@ class _OneScreenState extends State<OneScreen>
   void _changeTab(int selectedIndex) {
     if (selectedIndex >= 0) _tabController.animateTo(selectedIndex);
   }
-  List<String> category = [
-    'general',
-    'business',
-    'entertainment',
-    'health',
-    'science',
-    'sports',
-    'technology',
-  ];
 
-  List<String> categoryTitle=[
-    'General',
-    'Business',
-    'Entertainment',
-    'Health',
-    'Science',
-    'Sports',
-    'Technology',
-  ];
+  // List<String> category = [
+  //   'general',
+  //   'business',
+  //   'entertainment',
+  //   'health',
+  //   'science',
+  //   'sports',
+  //   'technology',
+  // ];
+
+  // List<String> categoryTitle = [
+  //   'General',
+  //   'Business',
+  //   'Entertainment',
+  //   'Health',
+  //   'Science',
+  //   'Sports',
+  //   'Technology',
+  // ];
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    final news = Provider.of<DataProvider>(context);
 
+    tabMaker() {
+      List<Tab> tabs = [];
+      for (int i = 0; i < news.category1.length; i++) {
+        tabs.add(
+          Tab(text: news.category1[i]),
+        );
+      }
+      return tabs;
+    }
+
+    return Scaffold(
       body: DefaultTabController(
-        length: category.length,
+        length: 7,
         child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
             backgroundColor: Colors.white,
             elevation: 0,
             title: TabBar(
-              controller: _tabController,
+              controller: this._tabController,
               onTap: _changeTab,
               isScrollable: true,
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               labelColor: Colors.white,
               unselectedLabelColor: Colors.grey,
               indicator: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
                 color: Colors.black,
               ),
-              labelStyle: TextStyle(
+              labelStyle: const TextStyle(
                 fontFamily: "Modelica",
               ),
-              tabs: [
-               for(int i=0 ; i<categoryTitle.length; i++)
-                Tab(text: categoryTitle[i]),
+              tabs:
+                  //tabMaker(),
+                  const [
+                Tab(text: "General"),
+                Tab(text: "Business"),
+                Tab(text: "Entertainment"),
+                Tab(text: "Health"),
+                Tab(text: "Science"),
+                Tab(text: "Sports"),
+                Tab(text: "Technology"),
               ],
             ),
           ),
           body: TabBarView(
-            controller: _tabController,
+            controller: this._tabController,
             physics: BouncingScrollPhysics(),
             children: [
-              for(int i =0 ;i < category.length ; i++)
-           HomeScreen(category: category[i],),
+              ListView.builder(
+                //     scrollDirection: Axis.horizontal,
+                itemCount: news.dataLength,
+                itemBuilder: (BuildContext context, int index) {
+                  return news.getdata() != null
+                      ? HomeScreen()
+                      : Text('bla bla');
+                },
+              ),
+              // for (int i = 0; i < category.length; i++)
+              //   news.isFetching
+              //       ? Center(child: CircularProgressIndicator())
+              //       : HomeScreen(
+              //           //  category: category[i],
+              //           ),
             ],
           ),
         ),
