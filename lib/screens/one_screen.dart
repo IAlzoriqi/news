@@ -13,27 +13,21 @@ class OneScreen extends StatefulWidget {
 
 class _OneScreenState extends State<OneScreen>
     with SingleTickerProviderStateMixin {
-  late final TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(
-      length: 7,
-      vsync: this,
-      initialIndex: 0,
-    );
+
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
     super.dispose();
   }
 
-  void _changeTab(int selectedIndex) {
-    if (selectedIndex >= 0) _tabController.animateTo(selectedIndex);
-  }
+  // void _changeTab(int selectedIndex) {
+  //   if (selectedIndex >= 0) _tabController.animateTo(selectedIndex);
+  // }
 
   // List<String> category = [
   //   'general',
@@ -45,15 +39,15 @@ class _OneScreenState extends State<OneScreen>
   //   'technology',
   // ];
 
-  // List<String> categoryTitle = [
-  //   'General',
-  //   'Business',
-  //   'Entertainment',
-  //   'Health',
-  //   'Science',
-  //   'Sports',
-  //   'Technology',
-  // ];
+  List<String> categoryTitle = [
+    'General',
+    'Business',
+    'Entertainment',
+    'Health',
+    'Science',
+    'Sports',
+    'Technology',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -61,9 +55,9 @@ class _OneScreenState extends State<OneScreen>
 
     tabMaker() {
       List<Tab> tabs = [];
-      for (int i = 0; i < news.category1.length; i++) {
+      for (int i = 0; i < categoryTitle.length; i++) {
         tabs.add(
-          Tab(text: news.category1[i]),
+          Tab(text: categoryTitle[i]),
         );
       }
       return tabs;
@@ -78,8 +72,8 @@ class _OneScreenState extends State<OneScreen>
             backgroundColor: Colors.white,
             elevation: 0,
             title: TabBar(
-              controller: this._tabController,
-              onTap: _changeTab,
+             // controller: this._tabController,
+              //onTap: _changeTab,
               isScrollable: true,
               physics: const BouncingScrollPhysics(),
               labelColor: Colors.white,
@@ -105,25 +99,27 @@ class _OneScreenState extends State<OneScreen>
             ),
           ),
           body: TabBarView(
-            controller: this._tabController,
+           // controller: this._tabController,
             physics: BouncingScrollPhysics(),
-            children: [
-              ListView.builder(
-                //     scrollDirection: Axis.horizontal,
-                itemCount: news.dataLength,
-                itemBuilder: (BuildContext context, int index) {
-                  return news.getdata() != null
-                      ? HomeScreen()
-                      : Text('bla bla');
-                },
-              ),
+            children: tabMaker(),
+            //[
+
+              // ListView.builder(
+              //   //     scrollDirection: Axis.horizontal,
+              //   itemCount: news.dataLength,
+              //   itemBuilder: (BuildContext context, int index) {
+              //     return news.getdata() != null
+              //         ? HomeScreen()
+              //         : Text('bla bla');
+              //   },
+              // ),
               // for (int i = 0; i < category.length; i++)
               //   news.isFetching
               //       ? Center(child: CircularProgressIndicator())
               //       : HomeScreen(
               //           //  category: category[i],
               //           ),
-            ],
+            //],
           ),
         ),
       ),
