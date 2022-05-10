@@ -13,22 +13,6 @@ class OneScreen extends StatefulWidget {
 
 class _OneScreenState extends State<OneScreen>
     with SingleTickerProviderStateMixin {
-
-  @override
-  void initState() {
-    super.initState();
-
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  // void _changeTab(int selectedIndex) {
-  //   if (selectedIndex >= 0) _tabController.animateTo(selectedIndex);
-  // }
-
   // List<String> category = [
   //   'general',
   //   'business',
@@ -39,15 +23,15 @@ class _OneScreenState extends State<OneScreen>
   //   'technology',
   // ];
 
-  List<String> categoryTitle = [
-    'General',
-    'Business',
-    'Entertainment',
-    'Health',
-    'Science',
-    'Sports',
-    'Technology',
-  ];
+  //  List<String> categoryTitle = [
+  //   'General',
+  //   'Business',
+  //   'Entertainment',
+  //   'Health',
+  //   'Science',
+  //   'Sports',
+  //   'Technology',
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -55,9 +39,14 @@ class _OneScreenState extends State<OneScreen>
 
     tabMaker() {
       List<Tab> tabs = [];
-      for (int i = 0; i < categoryTitle.length; i++) {
+      for (int i = 0; i < news.category1.length; i++) {
         tabs.add(
-          Tab(text: categoryTitle[i]),
+           Tab(
+            child: HomeScreen(),
+          ),
+
+
+          //  category: category[i],
         );
       }
       return tabs;
@@ -72,7 +61,7 @@ class _OneScreenState extends State<OneScreen>
             backgroundColor: Colors.white,
             elevation: 0,
             title: TabBar(
-             // controller: this._tabController,
+              // controller: this._tabController,
               //onTap: _changeTab,
               isScrollable: true,
               physics: const BouncingScrollPhysics(),
@@ -99,27 +88,25 @@ class _OneScreenState extends State<OneScreen>
             ),
           ),
           body: TabBarView(
-           // controller: this._tabController,
-            physics: BouncingScrollPhysics(),
+            // controller: this._tabController,
+            physics: const BouncingScrollPhysics(),
             children: tabMaker(),
-            //[
 
-              // ListView.builder(
-              //   //     scrollDirection: Axis.horizontal,
-              //   itemCount: news.dataLength,
-              //   itemBuilder: (BuildContext context, int index) {
-              //     return news.getdata() != null
-              //         ? HomeScreen()
-              //         : Text('bla bla');
-              //   },
-              // ),
-              // for (int i = 0; i < category.length; i++)
-              //   news.isFetching
-              //       ? Center(child: CircularProgressIndicator())
-              //       : HomeScreen(
-              //           //  category: category[i],
-              //           ),
-            //],
+            // ListView.builder(
+            //   //     scrollDirection: Axis.horizontal,
+            //   itemCount: news.dataLength,
+            //   itemBuilder: (BuildContext context, int index) {
+            //     return news.getdata() != null
+            //         ? HomeScreen()
+            //         : Text('bla bla');
+            //   },
+            // ),
+            // for (int i = 0; i < category.length; i++)
+            //   news.isFetching
+            //       ? Center(child: CircularProgressIndicator())
+            //       : HomeScreen(
+            //           //  category: category[i],
+            //           ),
           ),
         ),
       ),

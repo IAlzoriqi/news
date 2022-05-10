@@ -7,9 +7,9 @@ import 'package:news/service/service.dart';
 import 'package:http/http.dart' as http;
 
 class DataProvider with ChangeNotifier {
-  List<NewsModel> _news = [];
+ final List<NewsModel> _news = [];
   List<NewsModel> get getNews => [..._news];
-  List<DataModel> _data =[];
+final  List<DataModel> _data =[];
   List<DataModel> get getDataModel =>[..._data];
   bool _isFetching = false;
   bool get isFetching => _isFetching;
@@ -27,6 +27,7 @@ class DataProvider with ChangeNotifier {
   int get dataLength {
     return _data.length;
   }
+
   Future<NewsModel> getdata() async {
     _isFetching = true;
     notifyListeners();
@@ -35,7 +36,7 @@ class DataProvider with ChangeNotifier {
         'limit=100&offset0&categories=general';
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
-      print('response is ${response}');
+      print('response is $response');
       final body = json.decode(response.body);
       print('body is ${body}');
       return NewsModel.fromJson(body);

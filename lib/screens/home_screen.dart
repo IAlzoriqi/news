@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:news/providers/data.dart';
 import 'package:news/widgets/article_widget.dart';
 import 'package:news/widgets/sub_article_screen.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({
+  const HomeScreen({
     Key? key,
     // required this.category,
   }) : super(key: key);
