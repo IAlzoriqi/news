@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -7,16 +9,19 @@ import 'package:news/widgets/sub_article_screen.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({
+  HomeScreen({
     Key? key,
-    // required this.category,
+    required this.categoryindex,
   }) : super(key: key);
-  // String category;
+  int categoryindex;
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  //int inddata = Provider.of<DataProvider>(context);
+  // get index => null;
+
   /*
   Future<NewsModel> getdata() async {
     String url =
@@ -34,46 +39,83 @@ class _HomeScreenState extends State<HomeScreen> {
   }
    */
 
+/*
+  @override
+  void initState() {
+    super.initState();
+    final data=  Provider.of<DataProvider>(context,listen:false);
+    data.getdata(widget.categoryindex);
+    print('${data.getNews}');
+    // WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    // final data=  Provider.of<DataProvider>(context,listen:false);
+    // data.getdata(widget.categoryindex);
+    // print('${data.getNews}');
+    // });
+  }
+  */
+  @override
+  void initState() {
+    var news;
+
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      setState(() {
+        Future.delayed(Duration.zero, () async {
+          news = await Provider.of<DataProvider>(context, listen: false)
+              .getdata(widget.categoryindex);
+          print(news);
+        });
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final news = Provider.of<DataProvider>(context);
+    final news = Provider.of<DataProvider>(
+      context,
+    );
+    print('${news.getNews}');
     return SingleChildScrollView(
       child: Column(
         children: [
-          ListView.builder(
-              padding: const EdgeInsets.all(10),
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: news.dataLength,
-              itemBuilder: (BuildContext context, int index) {
-                final data = news.getNews[index].dataModel[index];
-                return InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SubArticle(
-                          title: data.title!,
-                          author: data.author!,
-                          category: data.category!,
-                          image: data.image!,
-                          country: data.country!,
-                          description: data.description!,
-                          publishedAt: data.published_at!,
-                          source: data.source!,
-                          url: data.url!,
-                        ),
+          news.isLoading
+              ? CircularProgressIndicator()
+              : ListView.builder(
+                  padding: const EdgeInsets.all(10),
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: news.getNews.dataModel.length,
+                  // itemCount: 5,
+                  itemBuilder: (BuildContext context, int index) {
+                    final data = news.getNews.dataModel[index];
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SubArticle(
+                              title: data.title!,
+                              author: data.author!,
+                              category: data.category!,
+                              image: data.image!,
+                              country: data.country!,
+                              description: data.description!,
+                              publishedAt: data.published_at!,
+                              source: data.source!,
+                              url: data.url!,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Article(
+                        title: data.title!,
+                        author: data.author!,
+                        categoryType: data.category!,
+                        image: data.image!,
                       ),
                     );
-                  },
-                  child: Article(
-                    title: data.title!,
-                    author: data.author!,
-                    categoryType: data.category!,
-                    image: data.image!,
-                  ),
-                );
-              })
+                  })
+
+          //: CircularProgressIndicator(),
         ],
       ),
     );

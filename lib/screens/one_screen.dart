@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:news/providers/data.dart';
 import 'package:news/screens/home_screen.dart';
-import 'package:news/widgets/custom_text.dart';
 import 'package:provider/provider.dart';
 
 class OneScreen extends StatefulWidget {
@@ -36,18 +35,17 @@ class _OneScreenState extends State<OneScreen>
   @override
   Widget build(BuildContext context) {
     final news = Provider.of<DataProvider>(context);
-
+print ('build one screen');
     tabMaker() {
       List<Tab> tabs = [];
       for (int i = 0; i < news.category1.length; i++) {
         tabs.add(
-           Tab(
-            child: HomeScreen(),
+          Tab(
+            child: HomeScreen(categoryindex : i,),
           ),
 
-
-          //  category: category[i],
         );
+        print('for tabs ');
       }
       return tabs;
     }
@@ -91,7 +89,10 @@ class _OneScreenState extends State<OneScreen>
             // controller: this._tabController,
             physics: const BouncingScrollPhysics(),
             children: tabMaker(),
-
+            // children: [
+            //   // HomeScreen(),
+            //   // HomeScreen(),
+            // ],
             // ListView.builder(
             //   //     scrollDirection: Axis.horizontal,
             //   itemCount: news.dataLength,

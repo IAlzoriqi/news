@@ -34,8 +34,6 @@ class _SubArticleState extends State<SubArticle> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
-    bool isFavorite = false;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -43,21 +41,7 @@ class _SubArticleState extends State<SubArticle> {
         iconTheme: IconThemeData(
           color: Colors.black,
         ),
-        actions: [
-          IconButton(
-            icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border),
-            onPressed: () {
-              print(isFavorite);
-              setState(() {
-                if (isFavorite == false)
-                  isFavorite = true;
-                else
-                  isFavorite = false;
-                // print(isFavorite);
-              });
-            },
-          )
-        ],
+
       ),
       body: SingleChildScrollView(
         child: Padding(
