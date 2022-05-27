@@ -9,6 +9,8 @@ class NewsModel {
     required this.dataModel,
   });
   factory NewsModel.fromJson(Map<String, dynamic> json) {
+
+    print(json);
     return NewsModel(
       paginationModel: PaginationModel.fromJson(json['pagination']),
       dataModel: parseData(json),
@@ -18,6 +20,16 @@ class NewsModel {
     );
   }
 
+
+  // factory NewsModel.toJson() {
+  //   return NewsModel(
+  //     paginationModel: PaginationModel.fromJson(json['pagination']),
+  //     dataModel: parseData(json),
+  //     // dataModel: List.from(json['dataModel'])
+  //     //     .map((e) => DataModel.fromJson(e))
+  //     //     .toList(),
+  //   );
+  // }
   static List<DataModel> parseData(Map<String, dynamic> dataJson) {
     print("step");
     var list = dataJson['data'] as List;

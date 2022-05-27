@@ -3,6 +3,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:news/models/news_model.dart';
+import 'package:news/models/news_model.dart';
+import 'package:news/models/pagination_model.dart';
 import 'package:news/providers/data.dart';
 import 'package:news/widgets/article_widget.dart';
 import 'package:news/widgets/sub_article_screen.dart';
@@ -10,10 +13,11 @@ import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({
-    Key? key,
     required this.categoryindex,
-  }) : super(key: key);
+  });
+
   int categoryindex;
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -53,71 +57,140 @@ class _HomeScreenState extends State<HomeScreen> {
     // });
   }
   */
+   DataProvider _dataProvider =new DataProvider();
+
+
+
+
+   String massegErr='';
+
+    NewsModel news= NewsModel(
+      dataModel: [],
+      paginationModel: PaginationModel(
+        count: 0,
+        limit: 0,
+        offset: 0,
+        total: 0
+      )
+    );//=// Provider.of<DataProvider>(context);
+
+  getdata() async {
+    news=await _dataProvider
+        .getdata(widget.categoryindex).catchError((sd){
+
+
+      massegErr="هناك مشكلة ${sd.toString()}";
+      NewsModel newodwlreturn=NewsModel(
+          dataModel: [],
+          paginationModel: PaginationModel(
+              count: 0,
+              limit: 0,
+              offset: 0,
+              total: 0
+          )
+      );
+
+
+      return newodwlreturn;
+    });
+    setState(() {
+      news=news;
+      massegErr=massegErr;
+
+
+      if(massegErr.isNotEmpty){
+        ScaffoldMessenger.of(context).showSnackBar(
+
+            SnackBar(
+
+          content:  Text(massegErr),
+          duration: const Duration(seconds: 30),
+
+
+          //
+
+        ));
+      }
+    });
+
+  }
   @override
   void initState() {
-    var news;
+    super.initState();
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      setState(() {
-        Future.delayed(Duration.zero, () async {
-          news = await Provider.of<DataProvider>(context, listen: false)
-              .getdata(widget.categoryindex);
-          print(news);
-        });
-      });
-    });
+    // WidgetsBinding.instance!.addPostFrameCallback((_) {
+    //  setState(() {()
+    getdata();
+    // Future.delayed(Duration.zero, () async {
+    //   news = await Provider.of<DataProvider>(context, listen: false)
+    //       .getdata(widget.categoryindex);
+    //
+    //   print(news);
+      //  });
+      // });
+   // });
   }
 
   @override
   Widget build(BuildContext context) {
-    final news = Provider.of<DataProvider>(
-      context,
-    );
-    print('${news.getNews}');
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          news.isLoading
-              ? CircularProgressIndicator()
-              : ListView.builder(
-                  padding: const EdgeInsets.all(10),
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: news.getNews.dataModel.length,
-                  // itemCount: 5,
-                  itemBuilder: (BuildContext context, int index) {
-                    final data = news.getNews.dataModel[index];
-                    return InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SubArticle(
-                              title: data.title!,
-                              author: data.author!,
-                              category: data.category!,
-                              image: data.image!,
-                              country: data.country!,
-                              description: data.description!,
-                              publishedAt: data.published_at!,
-                              source: data.source!,
-                              url: data.url!,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Article(
-                        title: data.title!,
-                        author: data.author!,
-                        categoryType: data.category!,
-                        image: data.image!,
-                      ),
-                    );
-                  })
 
-          //: CircularProgressIndicator(),
-        ],
-      ),
-    );
+
+
+
+    // if(news==null)
+    // var news = Provider.of<DataProvider>(
+    //   context,
+    // );
+    // print('${news.news[]}');
+    return Directionality(
+        textDirection: TextDirection.rtl,
+        child: Container(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                 news.dataModel.isEmpty
+                    ? CircularProgressIndicator()
+                    : ListView.builder(
+                    padding: const EdgeInsets.all(10),
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: news.dataModel.length,
+                    // itemCount: 5,
+                    itemBuilder: (BuildContext context, int index) {
+                      final data = news.dataModel[index];
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SubArticle(
+                                title: data.title!,
+                                author: data.author!,
+                                category: data.category!,
+                                image: data.image!,
+                                country: data.country!,
+                                description: data.description!,
+                                publishedAt: data.published_at!,
+                                source: data.source!,
+                                url: data.url!,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Article(
+                          title: data.title!,
+                          author: data.author!,
+                          categoryType: data.category!,
+                          image: data.image!,
+                        ),
+                      );
+                    })
+
+                //: CircularProgressIndicator(),
+              ],
+            ),
+          ),
+        )
+        );
   }
 }

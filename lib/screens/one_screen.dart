@@ -32,23 +32,41 @@ class _OneScreenState extends State<OneScreen>
   //   'Technology',
   // ];
 
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+  }
+  var news ;//=// Provider.of<DataProvider>(context);
+
+
+
+  tabMaker() {
+    List<Tab> tabs = [];
+    for (int i = 0; i < news.category1.length; i++) {
+      print(news.category1.length);
+      print(news.category1[i]);
+      tabs.add(
+        Tab(
+          child: HomeScreen(categoryindex : i,),
+        ),
+
+      );
+      print('for tabs ');
+    }
+    return tabs;
+  }
   @override
   Widget build(BuildContext context) {
-    final news = Provider.of<DataProvider>(context);
-print ('build one screen');
-    tabMaker() {
-      List<Tab> tabs = [];
-      for (int i = 0; i < news.category1.length; i++) {
-        tabs.add(
-          Tab(
-            child: HomeScreen(categoryindex : i,),
-          ),
+    news = Provider.of<DataProvider>(context);
+    tabMaker();
 
-        );
-        print('for tabs ');
-      }
-      return tabs;
-    }
+
+
+print ('build one screen');
+
 
     return Scaffold(
       body: DefaultTabController(

@@ -7,7 +7,7 @@ import 'package:news/models/pagination_model.dart';
 import 'package:news/service/service.dart';
 import 'package:http/http.dart' as http;
 
-class DataProvider with ChangeNotifier {
+class DataProvider extends ChangeNotifier {
   late NewsModel _newsm;
 // NewsModel get getnew => _newsm;
   // List<NewsModel> _news = [];
@@ -28,26 +28,33 @@ class DataProvider with ChangeNotifier {
   ];
   List<String> get category1 => _category;
 
-  Future<NewsModel> getdata(int indexcat) async {
+  Future <NewsModel> getdata(int indexcat) async {
     print('get data');
     String url =
         'http://api.mediastack.com/v1/news?access_key=2a1085d36be262ef91826756ce186f60&'
         'limit=100&offset0&categories=${_category[indexcat]}';
+
+    print(url);
     final response = await http.get(Uri.parse(url));
     print('reaponse statuscode' "${response.statusCode}");
     if (response.statusCode == 200) {
       print('response is ${response}');
-      final body = json.decode(response.body);
+      Map<String, dynamic>  body = json.decode(response.body);
       print('body is ${body}');
-      _newsm = NewsModel.fromJson(body);
+      _newsm= NewsModel.fromJson(body);
       _isLoading = false;
       notifyListeners();
       print(_newsm);
 
       return _newsm;
     } else {
+
+      throw Exception(' statusCode ${response.statusCode} body:${response.body}');
+
       print('errorr noot 200');
-      throw Exception('Failed to load jobs from API');
+       // return _newsm;
+
+
     }
   }
 }
